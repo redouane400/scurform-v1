@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecurForm - Plateforme TFP-APS</title>
+    <title>SecurForm - Espace Premium TFP-APS</title>
     <style>
         :root {
             --bg-color: #0b132b;
@@ -11,7 +11,8 @@
             --glass-border: rgba(255, 255, 255, 0.08);
             --primary-color: #00e5ff;
             --success-color: #10b981;
-            --warning-color: #fbbf24;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
             --text-color: #f8fafc;
             --text-muted: #94a3b8;
         }
@@ -44,22 +45,17 @@
             border: 1px solid var(--glass-border);
             padding: 12px 25px;
             border-radius: 16px;
-            height: 75px;
         }
-        .logo-area { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.2rem; letter-spacing: 0.5px; }
-        .logo-icon { width: 30px; height: 30px; background: linear-gradient(135deg, var(--primary-color), #007bb6); border-radius: 6px; }
-        .main-app-title { font-size: 1.6rem; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; }
+        .logo-img { height: 50px; width: auto; }
+        .main-app-title { font-size: 1.8rem; font-weight: 800; letter-spacing: 1px; text-transform: uppercase; }
         
-        .auth-cluster { display: flex; gap: 10px; }
-        .btn-auth-nav {
-            background: rgba(255, 255, 255, 0.03); border: 1px solid var(--glass-border);
-            color: #fff; padding: 10px 20px; border-radius: 10px; cursor: pointer;
-            font-size: 0.88rem; font-weight: 600; transition: 0.2s;
-        }
-        .btn-auth-nav:hover { background: rgba(255, 255, 255, 0.08); border-color: var(--text-muted); }
-        .btn-auth-nav.primary { background: var(--primary-color); color: #0b132b; border: none; font-weight: 700; }
+        .profile-widget { display: flex; align-items: center; gap: 12px; }
+        .avatar-box { width: 40px; height: 40px; background: linear-gradient(135deg, var(--error-color), #b91c1c); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #fff; }
+        .profile-info { display: flex; flex-direction: column; }
+        .profile-name { font-size: 0.9rem; font-weight: 600; }
+        .profile-role { font-size: 0.75rem; color: var(--primary-color); font-weight: 700; }
 
-        /* GRID PRINCIPALE ACCUEIL */
+        /* GRID PRINCIPALE */
         .main-content-grid {
             display: grid;
             grid-template-columns: 320px 1fr 340px;
@@ -76,98 +72,109 @@
             flex-direction: column;
         }
 
-        /* PANNEAU GAUCHE */
-        .left-sidebar { display: flex; flex-direction: column; gap: 15px; }
-        .info-bloc { background: rgba(255,255,255,0.01); border-left: 4px solid var(--primary-color); padding: 15px; border-radius: 4px 12px 12px 4px; font-size: 0.85rem; line-height: 1.4; }
-        .info-bloc.excellence { border-left-color: #3b82f6; }
-        .info-bloc.objectif { border-left-color: var(--success-color); }
-        .info-bloc.reussite { border-left-color: var(--warning-color); }
-
-        /* ZONE CENTRALE : TABLEAU DES CONTENUS ET DES UVs */
-        .center-dashboard-view { display: flex; flex-direction: column; gap: 20px; }
-        .dashboard-header { text-align: center; margin-bottom: 5px; }
-        .dashboard-header h1 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
-        .dashboard-header p { color: var(--text-muted); font-size: 0.9rem; }
-
-        /* Grille des 12 UVs */
-        .uv-showcase-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; margin-bottom: 20px; }
+        /* ZONE GAUCHE : BARÈME & STRATÉGIE */
+        .left-sidebar { display: flex; flex-direction: column; gap: 20px; }
         
-        .uv-card-item { 
-            background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); 
-            padding: 18px; border-radius: 14px; text-align: left; position: relative;
-            display: flex; flex-direction: column; justify-content: space-between; min-height: 110px;
-            transition: 0.2s; cursor: pointer;
+        .timer-box {
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 20px;
         }
-        /* Style spécifique pour le tableau grisé non-payé */
-        .uv-card-item.locked {
-            opacity: 0.35;
-            background: rgba(11, 19, 43, 0.4);
-            cursor: not-allowed;
-        }
-        .uv-card-item.locked:hover {
-            border-color: var(--glass-border);
-            transform: none;
-        }
-        .uv-card-item:not(.locked):hover { 
-            background: rgba(0, 229, 255, 0.03); border-color: var(--primary-color); 
-            transform: translateY(-1px);
-        }
+        .timer-ring { width: 130px; height: 130px; position: relative; }
+        .timer-svg { width: 130px; height: 130px; transform: rotate(-90deg); }
+        .timer-svg circle { fill: none; stroke-width: 8; cx: 65; cy: 65; r: 55; }
+        .timer-bg { stroke: rgba(255, 255, 255, 0.03); }
+        .timer-fill { stroke: var(--success-color); stroke-dasharray: 345.57; stroke-dashoffset: 0; transition: stroke-dashoffset 1s linear; }
+        .timer-count { position: absolute; display: flex; flex-direction: column; justify-content: center; align-items: center; inset: 0; }
+        #ui-timer-num { font-size: 2.2rem; font-weight: 800; }
 
-        .uv-card-top { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; }
-        .uv-badge-id { font-size: 0.72rem; font-weight: 800; color: var(--primary-color); background: rgba(0, 229, 255, 0.06); padding: 2px 6px; border-radius: 4px; }
-        .uv-card-item.locked .uv-badge-id { color: var(--text-muted); background: rgba(255,255,255,0.03); }
+        .bareme-box {
+            background: rgba(255, 255, 255, 0.01);
+            border: 1px dashed var(--glass-border);
+            border-radius: 14px;
+            padding: 18px;
+        }
+        .bareme-title { font-size: 0.85rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; margin-bottom: 10px; letter-spacing: 0.5px; }
+        .bareme-text { font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 12px; }
+        .bareme-list { list-style: none; display: flex; flex-direction: column; gap: 6px; font-size: 0.8rem; }
+        .bareme-list li { padding-left: 12px; position: relative; }
+        .bareme-list li::before { content: "•"; position: absolute; left: 0; color: var(--primary-color); }
+
+        /* ZONE CENTRALE : ACCUEIL PREMIUM (ONGLETS + GRILLE) */
+        .premium-dashboard-view { display: flex; flex-direction: column; gap: 20px; }
         
-        .uv-title-text { color: #fff; font-size: 0.95rem; font-weight: 700; margin-top: 8px; }
-        .uv-desc-text { color: var(--text-muted); font-size: 0.78rem; margin-top: 3px; line-height: 1.3; }
-        .uv-action-status { font-size: 0.75rem; font-weight: 700; margin-top: 12px; }
-        .status-free { color: var(--success-color); }
-        .status-premium { color: var(--warning-color); }
-
-        /* MOTEUR DE L'INTERFACE EXAMEN / QCM */
-        .quiz-container { width: 100%; text-align: left; }
-        .quiz-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-weight: 600; font-size: 0.9rem; }
-        .progress-bar-bg { background: rgba(255,255,255,0.05); height: 8px; border-radius: 10px; width: 100%; margin-bottom: 25px; overflow: hidden; }
-        .progress-bar-fill { background: linear-gradient(90deg, var(--primary-color), var(--success-color)); height: 100%; width: 0%; }
-        .question-text { font-size: 1.35rem; font-weight: 700; margin-bottom: 25px; line-height: 1.4; color: #fff; }
-        .options-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .option-item { 
-            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); 
-            padding: 16px 20px; border-radius: 12px; cursor: pointer; font-size: 0.92rem; 
-            color: #cbd5e1; transition: 0.2s; text-align: left; width: 100%;
+        /* Onglets de navigation style Maquette */
+        .tabs-header-row { display: flex; gap: 12px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            color: var(--text-muted); padding: 10px 20px; border-radius: 30px; cursor: pointer;
+            font-size: 0.85rem; font-weight: 600; transition: 0.2s;
         }
-        .option-item:hover { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.04); color: #fff; }
+        .tab-btn:hover { color: #fff; border-color: var(--text-muted); }
+        .tab-btn.active { background: transparent; border-color: var(--primary-color); color: var(--primary-color); box-shadow: 0 0 15px rgba(0, 229, 255, 0.1); }
 
-        /* ÉCRAN DE BLOCAGE TEMPOREL */
-        .timer-display { font-size: 2.2rem; font-weight: 800; color: var(--warning-color); margin: 15px 0; letter-spacing: 1px; }
+        /* Grille des modules */
+        .modules-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 15px;
+        }
+        .module-grid-card {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            border-radius: 14px; padding: 20px; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; gap: 8px; justify-content: space-between;
+            min-height: 150px;
+        }
+        .module-grid-card:hover { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.04); transform: translateY(-2px); }
+        .card-tag { font-size: 0.7rem; font-weight: 800; color: var(--primary-color); text-transform: uppercase; background: rgba(0, 229, 255, 0.08); padding: 3px 8px; border-radius: 4px; align-self: flex-start; }
+        .card-title { font-size: 1rem; font-weight: 700; color: #fff; line-height: 1.3; }
+        .card-desc { font-size: 0.8rem; color: var(--text-muted); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .card-footer { font-size: 0.75rem; font-weight: 700; color: var(--primary-color); margin-top: 5px; }
 
-        /* Zone d'appel à l'action Stripe */
-        .pricing-cta-box { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; background: rgba(255,255,255,0.01); border: 1px solid var(--glass-border); padding: 20px; border-radius: 16px; text-align: center; }
-        .motivation-text { font-size: 0.82rem; color: var(--text-muted); font-style: italic; max-width: 550px; line-height: 1.4; }
+        /* ZONE DU QUIZ REFAITE */
+        .quiz-container { min-height: 550px; justify-content: flex-start; }
+        .quiz-header { display: flex; justify-content: space-between; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 25px; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; }
+        .question-text { font-size: 1.35rem; font-weight: 600; line-height: 1.4; margin-bottom: 30px; color: #fff; }
         
-        .btn-gold-stripe {
-            background: linear-gradient(135deg, #fbbf24 0%, #d97706 100%); color: #0b132b;
-            font-weight: 800; border: none; padding: 16px 35px; border-radius: 12px; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 0.5px; width: 100%; transition: 0.2s; font-size: 0.9rem;
+        .options-list { display: flex; flex-direction: column; gap: 12px; }
+        .option-item {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            padding: 18px 22px; border-radius: 12px; cursor: pointer; transition: 0.2s; font-size: 0.95rem;
         }
-        .btn-gold-stripe:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(251, 191, 36, 0.3); }
-
-        /* PANNEAU DROIT (EXAMENS BLANCS) */
-        .right-sidebar { max-height: 680px; overflow-y: auto; gap: 10px; }
-        .sidebar-section-title { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--primary-color); margin-bottom: 12px; letter-spacing: 0.5px; }
-        .exam-nav-item {
-            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border); opacity: 0.4;
-            padding: 12px 16px; border-radius: 12px; cursor: not-allowed; display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;
+        .option-item:hover:not(.disabled) { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.05); }
+        .option-item.correct { background: var(--success-color) !important; color: #fff; font-weight: 700; border: none; }
+        .option-item.incorrect { background: var(--error-color) !important; color: #fff; border: none; }
+        
+        .action-btn {
+            background: linear-gradient(135deg, #00e5ff 0%, #007bb6 100%); color: #0b132b;
+            font-weight: 800; border: none; padding: 16px; border-radius: 12px; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; margin-top: 25px; text-align: center; transition: 0.2s;
         }
-        .exam-name { font-size: 0.85rem; color: #fff; font-weight: 600; }
-        .lock-badge { font-size: 0.68rem; color: var(--warning-color); background: rgba(251, 191, 36, 0.08); padding: 2px 6px; border-radius: 4px; font-weight: 700; }
+        .action-btn:hover { box-shadow: 0 0 20px rgba(0, 229, 255, 0.3); }
 
-        /* FOOTER */
-        .footer-cta-banner { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.01); border: 1px solid var(--glass-border); padding: 25px 35px; border-radius: 18px; margin-top: 10px; }
+        /* ZONE DROITE : MENU DES MODULES DE FORMATION */
+        .right-sidebar { max-height: 750px; overflow-y: auto; gap: 10px; padding-right: 5px; }
+        .right-sidebar::-webkit-scrollbar { width: 6px; }
+        .right-sidebar::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+        
+        .sidebar-section-title { font-size: 0.85rem; font-weight: 800; text-transform: uppercase; color: var(--primary-color); margin: 15px 0 8px 0; letter-spacing: 0.5px; }
+        .sidebar-section-title:first-child { margin-top: 0; }
 
-        /* MODALE */
-        .modal-overlay { position: fixed; inset: 0; background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
-        .auth-modal { background: #131c35; border: 1px solid var(--glass-border); padding: 40px; border-radius: 24px; width: 100%; max-width: 440px; text-align: center; position: relative; }
-        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 1.6rem; cursor: pointer; color: var(--text-muted); }
+        .module-nav-item {
+            background: rgba(255, 255, 255, 0.02); border: 1px solid var(--glass-border);
+            padding: 12px 16px; border-radius: 10px; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; gap: 2px; margin-bottom: 8px;
+        }
+        .module-nav-item:hover { border-color: var(--primary-color); background: rgba(255, 255, 255, 0.04); }
+        .module-nav-item.active { background: rgba(0, 229, 255, 0.08); border-color: var(--primary-color); }
+        .module-nav-top { display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+        .module-nav-name { font-size: 0.88rem; color: #fff; font-weight: 600; margin-top: 2px; }
+
+        /* ÉCRAN DE RÉSULTATS DES SESSIONS */
+        .center-status-view { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; height: 100%; min-height: 500px; gap: 15px; }
+        .status-pill { padding: 6px 16px; border-radius: 30px; font-weight: 800; font-size: 0.85rem; text-transform: uppercase; border: 1px solid; }
+        .status-pill.valide { background: rgba(16, 185, 129, 0.15); color: var(--success-color); }
+        .status-pill.refuse { background: rgba(239, 68, 68, 0.15); color: var(--error-color); }
+
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -175,248 +182,330 @@
     <div class="web-app-wrapper">
         
         <div class="top-bar">
-            <div class="logo-area"><div class="logo-icon"></div>SecurForm</div>
-            <div class="main-app-title">QCM APS</div>
-            <div class="auth-cluster">
-                <button class="btn-auth-nav" onclick="openAuthModal('signup')">Inscription</button>
-                <button class="btn-auth-nav primary" onclick="openAuthModal('login') font-weight:700;">Connexion</button>
+            <img src="logo.png" alt="SecurForm" class="logo-img">
+            <div class="main-app-title">SecurForm TFP-APS</div>
+            <div class="profile-widget">
+                <div class="avatar-box">AD</div>
+                <div class="profile-info">
+                    <span class="profile-name">Administrateur</span>
+                    <span class="profile-role">Accès Total Admin</span>
+                </div>
             </div>
         </div>
 
         <div class="main-content-grid">
             
             <div class="left-sidebar">
-                <div class="info-bloc">
-                    <strong style="color:var(--primary-color); display:block; margin-bottom:4px;">📊 Programme d'Entraînement</strong>
-                    Optimise tes révisions grâce à un suivi adaptatif pensé pour ancrer tes connaissances et te faire progresser vers la réussite.
+                <div id="ui-timer-card" class="panel-card timer-box hidden">
+                    <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">Temps Restant</span>
+                    <div class="timer-ring">
+                        <svg class="timer-svg"><circle class="timer-bg"></circle><circle id="ui-timer-fill" class="timer-fill"></circle></svg>
+                        <div class="timer-count"><div id="ui-timer-num">60</div><span style="font-size:0.65rem; color:var(--text-muted);">SEC</span></div>
+                    </div>
                 </div>
-                <div class="info-bloc excellence">
-                    <strong style="color:#3b82f6; display:block; margin-bottom:4px;">💎 Programme d'Excellence</strong>
-                    Chaque question est extraite des référentiels officiels pour vous garantir une préparation 100% conforme au TFP-APS.
-                </div>
-                <div class="info-bloc objectif">
-                    <strong style="color:var(--success-color); display:block; margin-bottom:4px;">🚀 Objectif : 15 Jours</strong>
-                    Notre algorithme pédagogique est conçu pour vous amener à 12/20 de moyenne en moins de deux semaines d'entraînement.
-                </div>
-                <div class="info-bloc reussite">
-                    <strong style="color:var(--warning-color); display:block; margin-bottom:4px;">📊 Taux de Réussite</strong>
-                    95% des candidats utilisant notre version Premium obtiennent leur carte professionnelle dès la première présentation.
+
+                <div class="panel-card bareme-box">
+                    <div class="bareme-title">Barème Officiel CNAPS</div>
+                    <p class="bareme-text">Évaluation sous forme de <strong>QCU (Choix Unique)</strong> conforme à la législation en vigueur pour le TFP-APS.</p>
+                    <ul class="bareme-list">
+                        <li><strong>&ge; 12 / 20</strong> : Module validé avec succès</li>
+                        <li><strong>Entre 8 et 12</strong> : Ajourné (Rattrapage direct)</li>
+                        <li><strong>&lt; 8 / 20</strong> : Session obligatoire à refaire</li>
+                    </ul>
                 </div>
             </div>
 
-            <div id="center-mount" class="panel-card center-dashboard-view">
+            <div id="center-mount">
+                
+                <div id="view-dashboard" class="premium-dashboard-view">
+                    <div class="tabs-header-row">
+                        <button id="tab-uv" class="tab-btn active" onclick="switchDashboardTab('uv')">Modules Officiels (12 U.V.)</button>
+                        <button id="tab-exams" class="tab-btn" onclick="switchDashboardTab('exams')">Examens Blancs Premium (8 Sessions)</button>
+                    </div>
+                    <div id="ui-modules-grid" class="modules-cards-grid">
+                        </div>
                 </div>
 
+                <div id="view-quiz" class="panel-card quiz-container hidden">
+                    <div class="quiz-header">
+                        <span id="ui-progress-count">Question 1 / 10</span>
+                        <span id="ui-module-title" style="color: var(--primary-color); font-weight: 700;">UV</span>
+                    </div>
+                    <div class="question-text" id="ui-question-text">Chargement de la question règlementaire...</div>
+                    <div class="options-list" id="ui-options-box"></div>
+                    <button id="ui-next-btn" class="action-btn hidden" onclick="goNext()">Question Suivante &rarr;</button>
+                </div>
+
+                <div id="view-results" class="panel-card center-status-view hidden">
+                    <h2 style="font-size: 1.6rem;">Résultat de la Session</h2>
+                    <div id="ui-final-score" style="font-size: 4rem; font-weight: 900; color: var(--primary-color);">00 / 00</div>
+                    <div id="ui-status-badge"></div>
+                    <p id="ui-comment" style="font-size: 0.95rem; color: #cbd5e1; max-width: 500px; margin: 10px 0;"></p>
+                    <button class="action-btn" style="width: 240px;" onclick="resetToDashboardHome()">Retour au Tableau de Bord</button>
+                </div>
+
+            </div>
+
             <div class="panel-card right-sidebar">
-                <div class="sidebar-section-title">Examens Blancs Nationaux</div>
+                <div class="sidebar-section-title">Modules de Formation</div>
+                <div id="nav-group-uv"></div>
+                
+                <div class="sidebar-section-title">Sessions d'Examen Blanc</div>
                 <div id="nav-group-exams"></div>
             </div>
 
         </div>
-
-        <div class="footer-cta-banner">
-            <div>
-                <h3 style="font-size: 1.1rem; margin-bottom: 2px; color: var(--primary-color);">Prenez une longueur d'avance sur votre carrière</h3>
-                <p style="font-size: 0.85rem; color: var(--text-muted);">En activant votre pack Premium, vous supprimez définitivement les limites de temps et ouvrez l'accès aux 12 U.V.</p>
-            </div>
-            <button class="btn-auth-nav primary" style="padding: 12px 25px;" onclick="redirectToStripe()">Devenir Premium</button>
-        </div>
-
-    </div>
-
-    <div id="auth-modal-overlay" class="modal-overlay" style="display: none;">
-        <div class="auth-modal">
-            <span class="close-modal" onclick="closeAuthModal()">&times;</span>
-            <h3 id="modal-title" style="margin-bottom: 12px; color: #fff; font-size: 1.4rem; font-weight: 700;">Connexion SecurForm</h3>
-            <p id="modal-desc" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 25px;">Connectez-vous pour retrouver vos progressions d'examen.</p>
-            
-            <div style="border: 2px dashed rgba(255,255,255,0.05); padding: 35px 20px; border-radius: 14px; font-size: 0.85rem; color: var(--text-muted); background: rgba(0,0,0,0.1);">
-                ⚡ [ Formulaire Supabase Auth connecté ici à l'étape suivante ]
-            </div>
-        </div>
     </div>
 
     <script>
-        // Configuration complète des 12 UV officielles
-        const officialUVList = [
-            { id: 1, isFree: false, name: "U.V. 1 : Secours tactiques", desc: "Gestes d'urgence en milieu hostile et secours à victime." },
-            { id: 2, isFree: true,  name: "U.V. 2 : Environnement Juridique", desc: "Cadre légal, déontologie CNAPS et libertés publiques." },
-            { id: 3, isFree: true,  name: "U.V. 3 : Gestion des Conflits", desc: "Désescalade verbale, psychologie et gestion du stress." },
-            { id: 4, isFree: false, name: "U.V. 4 : Module Stratégique", desc: "Analyse des risques, consignes et rapports d'anomalies." },
-            { id: 5, isFree: true,  name: "U.V. 5 : Prévention Risques Incendie", desc: "Fondamentaux SSIAP, évacuation et systèmes d'alerte." },
-            { id: 6, isFree: false, name: "U.V. 6 : Modalité d'appréhension", desc: "Application de l'article 73 du Code de Procédure Pénale." },
-            { id: 7, isFree: false, name: "U.V. 7 : Risques Terroristes", desc: "Vigilance, profils suspects et réflexes d'alerte immédiats." },
-            { id: 8, isFree: false, name: "U.V. 8 : Module Professionnel", desc: "Surveillance générale, rondes et techniques de pointage." },
-            { id: 9, isFree: false, name: "U.V. 9 : Palpation & Inspection", desc: "Cadre légal de la palpation de sécurité et inspection des bagages." },
-            { id: 10, isFree: false, name: "U.V. 10 : Surveillance Électronique", desc: "Exploitation des alarmes et des systèmes de vidéosurveillance." },
-            { id: 11, isFree: false, name: "U.V. 11 : Gestion des Risques", desc: "Matières dangereuses, risques majeurs et périmètres de sécurité." },
-            { id: 12, isFree: false, name: "U.V. 12 : Événementiel Spécifique", desc: "Gestion des flux, grands rassemblements et filtrage du public." }
+        // RÉFÉRENTIEL DES 12 MODULES OFFICIELS DE VOTRE APPLI (BASE DE DONNÉES)
+        const uvModules = [
+            { id: 1, uv: "UV 1", name: "Secours tactiques", desc: "Gestes d'urgence et secours en milieu hostile.", qCount: 10 },
+            { id: 2, uv: "UV 2", name: "Environnement Juridique", desc: "Cadre légal, accident du travail, libertés publiques.", qCount: 10 },
+            { id: 3, uv: "UV 3", name: "Gestion des Conflits", desc: "Désescalade, psychologie et résolution de crise.", qCount: 10 },
+            { id: 4, uv: "UV 4", name: "Module Stratégique", desc: "Transmission des consignes et rapports d'information.", qCount: 8 },
+            { id: 5, uv: "UV 5", name: "Prévention des Risques Incendie", desc: "Mesures d'évacuation, alerte et bases SSIAP.", qCount: 15 },
+            { id: 6, uv: "UV 6", name: "Modalité d'appréhension", desc: "Exercice du métier et cadre d'arrestation (Art. 73 CPP).", qCount: 10 },
+            { id: 7, uv: "UV 7", name: "Risques Terroristes", desc: "Vigilance, détection de profils suspects et alertes.", qCount: 12 },
+            { id: 8, uv: "UV 8", name: "Module Professionnel", desc: "Communication, intervention, contrôle et surveillance.", qCount: 15 },
+            { id: 9, uv: "UV 9", name: "Palpation et Inspection", desc: "Contrôles d'accès, inspection des bagages et des badges.", qCount: 10 },
+            { id: 10, uv: "UV 10", name: "Surveillance Électronique", desc: "Télésurveillance, exploitation vidéo et systèmes d'alarme.", qCount: 8 },
+            { id: 11, uv: "UV 11", name: "Gestion des Risques", desc: "Analyse des risques majeurs, situations dégradées.", qCount: 10 },
+            { id: 12, uv: "UV 12", name: "Événementiel Spécifique", desc: "Sécurisation de flux, filtrage et grands rassemblements.", qCount: 12 }
         ];
 
-        // Questions de démonstration pour les tests libres
-        const demoQuestions = {
-            2: [{ q: "Selon l'article 73 du CPP, l'appréhension d'un individu en flagrant délit exige :", o: ["De le conduire immédiatement devant l'Officier de Police Judiciaire", "De le placer en cellule de dégrisement", "De lui confisquer ses papiers d'identité"] }],
-            3: [{ q: "Face à une personne agressive, quelle est l'attitude comportementale recommandée ?", o: ["Pratiquer la désescalade verbale et maintenir une distance de sécurité", "Élever la voix pour imposer immédiatement son autorité"] }],
-            5: [{ q: "Quelles sont les trois composantes indispensables du triangle du feu ?", o: ["Un combustible, un comburant et une énergie d'activation", "De l'azote, de l'eau et du dioxyde de carbone"] }]
-        };
-
-        let currentActiveQuiz = null;
-        let currentQuestionIdx = 0;
-
-        document.addEventListener("DOMContentLoaded", () => {
-            renderCenterDashboard();
-            renderExamsSidebar();
-            setInterval(checkLockTimer, 1000);
-        });
-
-        // Rendu du tableau central (avec distinction gratuit / payant grisé)
-        function renderCenterDashboard() {
-            const center = document.getElementById('center-mount');
-            
-            const lockTimestamp = localStorage.getItem('securform_free_lock');
-            if (lockTimestamp && Date.now() < parseInt(lockTimestamp)) {
-                renderLockScreen();
-                return;
-            }
-
-            center.innerHTML = `
-                <div class="dashboard-header">
-                    <h1>Maîtrisez votre avenir</h1>
-                    <p>Préparez vos examens TFP-APS et SSIAP avec l'outil référence des professionnels.</p>
-                </div>
-                
-                <div class="uv-showcase-grid" id="uv-grid-container"></div>
-
-                <div class="pricing-cta-box">
-                    <p class="motivation-text">"La sécurité privée ne tolère pas l'approximation. Débloquez immédiatement l'intégralité des 12 U.V. et nos 8 examens blancs nationaux en souscrivant au pack complet."</p>
-                    <button class="btn-gold-stripe" onclick="redirectToStripe()">Activer l'Accès Premium Complet — 9,99€/mois</button>
-                </div>
-            `;
-
-            const gridContainer = document.getElementById('uv-grid-container');
-            officialUVList.forEach(uv => {
-                const card = document.createElement('div');
-                // Si l'UV n'est pas gratuite, elle prend la classe "locked" (grisé à 35% d'opacité)
-                card.className = `uv-card-item ${uv.isFree ? '' : 'locked'}`;
-                
-                card.onclick = () => {
-                    if (!uv.isFree) {
-                        alert("Ce module nécessite l'accès Premium. Veuillez régler l'abonnement de 9,99€/mois pour le déverrouiller.");
-                    } else {
-                        startFreeQuiz(uv.id);
-                    }
-                };
-
-                card.innerHTML = `
-                    <div class="uv-card-top">
-                        <span class="uv-badge-id">UV ${uv.id}</span>
-                        <span class="${uv.isFree ? 'status-free' : 'status-premium'}" style="font-size:0.7rem; font-weight:700;">
-                            ${uv.isFree ? '🔓 ACCÈS LIBRE' : '🔒 PREMIUM'}
-                        </span>
-                    </div>
-                    <div>
-                        <div class="uv-title-text">${uv.name}</div>
-                        <div class="uv-desc-text">${uv.desc}</div>
-                    </div>
-                `;
-                gridContainer.appendChild(card);
+        // RÉFÉRENTIEL DES 8 EXAMENS BLANCS PREMIUM
+        const examBlancs = [];
+        for (let i = 1; i <= 8; i++) {
+            examBlancs.push({
+                id: 100 + i,
+                uv: `EXAM 0${i}`,
+                name: `Examen National Blanc - Session 0${i}`,
+                desc: "Test complet blanc simulant l'examen final officiel du TFP-APS.",
+                qCount: 10
             });
         }
 
-        function startFreeQuiz(uvId) {
-            currentActiveQuiz = demoQuestions[uvId];
-            currentQuestionIdx = 0;
-            renderQuestion();
+        // QUESTIONS TIREE DIRECTEMENT DES CAPTURES TRANSMISES
+        const realQuestionsBank = {
+            "UV 2": [
+                { q: "Concernant le module : Cadre Légal (Art. 73 CPP), quelle est la conduite réglementaire appropriée ?", r: ["conduire l'individu devant un OPJ", "relâcher immédiatement la personne", "procéder à une amende"], c: 0 }
+            ],
+            "UV 6": [
+                { q: "Selon l'article 73 du CPP, l'appréhension d'un individu en flagrant délit exige :", r: ["De le conduire immédiatement devant l'Officier de Police Judiciaire", "De le placer en cellule de dégrisement"], c: 0 }
+            ],
+            "UV 10": [
+                { q: "La levée de doute technique consiste à :", r: ["Vérifier sur place la réalité de la cause d'un déclenchement d'alarme", "Attendre 15 minutes pour voir si l'alarme s'arrête d'elle-même", "Appeler directement le client pour lui demander son avis"], c: 0 }
+            ]
+        };
+
+        let appState = { currentQuestions: [], activeIndex: 0, currentScore: 0, activeConfig: null, activeTab: 'uv' };
+        let countdownTimer;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initSidebarNavigation();
+            renderDashboardGrid();
+        });
+
+        // GENERATION DES MENUS LATERAUX
+        function initSidebarNavigation() {
+            const uvContainer = document.getElementById('nav-group-uv');
+            const examContainer = document.getElementById('nav-group-exams');
+
+            uvModules.forEach(m => uvContainer.appendChild(createNavListItem(m)));
+            examBlancs.forEach(e => examContainer.appendChild(createNavListItem(e)));
         }
 
-        function renderQuestion() {
-            const center = document.getElementById('center-mount');
-            const qData = currentActiveQuiz[currentQuestionIdx];
-            
-            center.innerHTML = `
-                <div class="quiz-container">
-                    <div class="quiz-header">
-                        <span style="color: var(--primary-color)">Question ${currentQuestionIdx + 1}/${currentActiveQuiz.length}</span>
-                        <span style="color: var(--text-muted)">ENTRAÎNEMENT GRATUIT</span>
-                    </div>
-                    <div class="progress-bar-bg"><div class="progress-bar-fill" style="width: 50%"></div></div>
-                    <div class="question-text">${qData.q}</div>
-                    <div class="options-list">
-                        ${qData.o.map(option => `<button class="option-item" onclick="handleOptionClick()">${option}</button>`).join('')}
-                    </div>
+        function createNavListItem(config) {
+            const item = document.createElement('div');
+            item.className = 'module-nav-item';
+            item.id = `nav-item-${config.id}`;
+            item.onclick = () => launchQuizSession(config);
+            item.innerHTML = `
+                <div class="module-nav-top">
+                    <span>${config.uv}</span>
+                    <span style="color: var(--primary-color);">${config.qCount} QCU</span>
                 </div>
+                <div class="module-nav-name">${config.name}</div>
             `;
+            return item;
         }
 
-        function handleOptionClick() {
-            // Fin immédiate de la démo
-            const expiryTime = Date.now() + (60 * 60 * 1000); 
-            localStorage.setItem('securform_free_lock', expiryTime.toString());
-            renderLockScreen();
-        }
-
-        function renderLockScreen() {
-            const center = document.getElementById('center-mount');
-            center.innerHTML = `
-                <div class="pricing-cta-box" style="padding: 40px 20px;">
-                    <h2 style="color: #fff;">Session gratuite validée ! 🎉</h2>
-                    <p class="motivation-text" style="margin: 10px 0 20px 0;">Le tableau complet des modules reste disponible. Pour lever le minuteur et accéder instantanément à l'ensemble des cours :</p>
-                    <div style="background: rgba(251, 191, 36, 0.03); border: 1px dashed rgba(251, 191, 36, 0.2); padding: 15px; border-radius: 12px; margin-bottom: 20px;">
-                        <span style="font-size: 0.75rem; color: var(--text-muted); font-weight:700;">PROCHAIN TEST LIBRE DANS :</span>
-                        <div id="countdown-timer" class="timer-display">60:00</div>
-                    </div>
-                    <button class="btn-gold-stripe" onclick="redirectToStripe()">Débloquer la plateforme — 9,99€/mois</button>
-                </div>
-            `;
-            checkLockTimer();
-        }
-
-        function checkLockTimer() {
-            const timerEl = document.getElementById('countdown-timer');
-            if (!timerEl) return;
-            const lockTimestamp = localStorage.getItem('securform_free_lock');
-            if (!lockTimestamp) { renderCenterDashboard(); return; }
-
-            const remainingMs = parseInt(lockTimestamp) - Date.now();
-            if (remainingMs <= 0) {
-                localStorage.removeItem('securform_free_lock');
-                renderCenterDashboard();
-            } else {
-                const totalSecs = Math.floor(remainingMs / 1000);
-                const mins = Math.floor(totalSecs / 60);
-                const secs = totalSecs % 60;
-                timerEl.textContent = `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-            }
-        }
-
-        function renderExamsSidebar() {
-            const container = document.getElementById('nav-group-exams');
-            container.innerHTML = '';
-            for (let i = 1; i <= 8; i++) {
-                const item = document.createElement('div');
-                item.className = 'exam-nav-item';
-                item.innerHTML = `<span class="exam-name">Examen National Blanc 0${i}</span><span class="lock-badge">🔒 Premium</span>`;
-                container.appendChild(item);
-            }
-        }
-
-        function redirectToStripe() { window.open('https://buy.stripe.com/#', '_blank'); }
-
-        // Personnalisation de la modale selon l'action choisie
-        function openAuthModal(mode) {
-            const title = document.getElementById('modal-title');
-            const desc = document.getElementById('modal-desc');
+        // GENERATION DES CARTES DANS L'ECRAN D'ACCUEIL CENTRAL
+        function renderDashboardGrid() {
+            const grid = document.getElementById('ui-modules-grid');
+            grid.innerHTML = '';
             
-            if (mode === 'signup') {
-                title.textContent = "Créer un compte SecurForm";
-                desc.textContent = "Inscrivez-vous pour commencer à suivre vos statistiques d'apprentissage.";
-            } else {
-                title.textContent = "Connexion SecurForm";
-                desc.textContent = "Connectez-vous pour retrouver vos progressions d'examen.";
-            }
-            document.getElementById('auth-modal-overlay').style.display = 'flex';
+            const datasets = (appState.activeTab === 'uv') ? uvModules : examBlancs;
+
+            datasets.forEach(config => {
+                const card = document.createElement('div');
+                card.className = 'module-grid-card';
+                card.onclick = () => launchQuizSession(config);
+                card.innerHTML = `
+                    <div>
+                        <div class="card-tag">${config.uv}</div>
+                        <div class="card-title" style="margin-top: 8px;">${config.name}</div>
+                        <div class="card-desc" style="margin-top: 5px;">${config.desc}</div>
+                    </div>
+                    <div class="card-footer">${config.qCount} QUESTIONS (QCU)</div>
+                `;
+                grid.appendChild(card);
+            });
         }
-        function closeAuthModal() { document.getElementById('auth-modal-overlay').style.display = 'none'; }
+
+        function switchDashboardTab(tabName) {
+            appState.activeTab = tabName;
+            document.getElementById('tab-uv').classList.remove('active');
+            document.getElementById('tab-exams').classList.remove('active');
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            renderDashboardGrid();
+        }
+
+        // LOGIQUE DE SESSIONS QCM
+        function launchQuizSession(moduleConfig) {
+            appState.activeConfig = moduleConfig;
+            appState.activeIndex = 0;
+            appState.currentScore = 0;
+
+            document.querySelectorAll('.module-nav-item').forEach(el => el.classList.remove('active'));
+            const sideEl = document.getElementById(`nav-item-${moduleConfig.id}`);
+            if (sideEl) sideEl.classList.add('active');
+
+            let pool = realQuestionsBank[moduleConfig.uv] || [];
+            appState.currentQuestions = [];
+
+            for (let i = 0; i < moduleConfig.qCount; i++) {
+                if (pool[i]) {
+                    appState.currentQuestions.push(pool[i]);
+                } else {
+                    appState.currentQuestions.push({
+                        q: `[${moduleConfig.uv}] Question #${i + 1} : Dans le cadre d'une intervention sur site, quelle est la procédure réglementaire de sécurité ?`,
+                        r: ["Appliquer scrupuleusement les consignes et informer directement la hiérarchie", "Attendre l'arrivée d'un autre agent sans agir", "Modifier le protocole d'alarme de manière unilatérale"],
+                        c: 0
+                    });
+                }
+            }
+
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById('view-results').classList.add('hidden');
+            document.getElementById('ui-timer-card').classList.remove('hidden');
+            document.getElementById('view-quiz').classList.remove('hidden');
+
+            displayCurrentQuestion();
+        }
+
+        function displayCurrentQuestion() {
+            document.getElementById('ui-next-btn').classList.add('hidden');
+            const currentData = appState.currentQuestions[appState.activeIndex];
+
+            document.getElementById('ui-progress-count').textContent = `Question ${appState.activeIndex + 1} / ${appState.currentQuestions.length}`;
+            document.getElementById('ui-module-title').textContent = `${appState.activeConfig.uv} : ${appState.activeConfig.name}`;
+            document.getElementById('ui-question-text').textContent = currentData.q;
+
+            const box = document.getElementById('ui-options-box');
+            box.innerHTML = '';
+
+            currentData.r.forEach((text, idx) => {
+                const opt = document.createElement('div');
+                opt.className = 'option-item';
+                opt.textContent = text;
+                opt.onclick = () => validateAnswerChoice(idx, opt);
+                box.appendChild(opt);
+            });
+
+            startCountdownTimer();
+        }
+
+        // GESTION DU MINUTEUR CIRCULAIRE
+        function startCountdownTimer() {
+            if (countdownTimer) clearInterval(countdownTimer);
+            let timeLeft = 60;
+            const numLabel = document.getElementById('ui-timer-num');
+            const fillStroke = document.getElementById('ui-timer-fill');
+            const maxCircumference = 345.57;
+
+            numLabel.textContent = timeLeft;
+            fillStroke.style.strokeDashoffset = 0;
+
+            countdownTimer = setInterval(() => {
+                timeLeft--;
+                numLabel.textContent = timeLeft;
+                fillStroke.style.strokeDashoffset = maxCircumference - (timeLeft / 60) * maxCircumference;
+
+                if (timeLeft <= 0) {
+                    clearInterval(countdownTimer);
+                    autoFailQuestion();
+                }
+            }, 1000);
+        }
+
+        function validateAnswerChoice(chosenIdx, clickedElement) {
+            clearInterval(countdownTimer);
+            const questionData = appState.currentQuestions[appState.activeIndex];
+            const items = document.querySelectorAll('.option-item');
+
+            items.forEach(el => el.classList.add('disabled'));
+
+            if (chosenIdx === questionData.c) {
+                clickedElement.classList.add('correct');
+                appState.currentScore++;
+            } else {
+                clickedElement.classList.add('incorrect');
+                items[questionData.c].classList.add('correct');
+            }
+
+            document.getElementById('ui-next-btn').classList.remove('hidden');
+        }
+
+        function autoFailQuestion() {
+            const questionData = appState.currentQuestions[appState.activeIndex];
+            const items = document.querySelectorAll('.option-item');
+            if (items.length > 0) items[questionData.c].classList.add('correct');
+            setTimeout(goNext, 1500);
+        }
+
+        function goNext() {
+            appState.activeIndex++;
+            if (appState.activeIndex < appState.currentQuestions.length) {
+                displayCurrentQuestion();
+            } else {
+                renderFinalReport();
+            }
+        }
+
+        function renderFinalReport() {
+            if (countdownTimer) clearInterval(countdownTimer);
+            document.getElementById('view-quiz').classList.add('hidden');
+            document.getElementById('ui-timer-card').classList.add('hidden');
+            
+            const viewRes = document.getElementById('view-results');
+            viewRes.classList.remove('hidden');
+
+            const scoreContainer = document.getElementById('ui-final-score');
+            const badgeContainer = document.getElementById('ui-status-badge');
+            const commentContainer = document.getElementById('ui-comment');
+
+            scoreContainer.textContent = `${appState.currentScore} / ${appState.currentQuestions.length}`;
+            const successRatio = (appState.currentScore / appState.currentQuestions.length) * 20;
+
+            if (successRatio >= 12) {
+                badgeContainer.innerHTML = `<span class="status-pill valide">Validé (${successRatio.toFixed(1)}/20)</span>`;
+                commentContainer.textContent = "Félicitations. Vous validez cette unité de valeur avec les exigences requises du CNAPS.";
+            } else {
+                badgeContainer.innerHTML = `<span class="status-pill refuse">Ajourné (${successRatio.toFixed(1)}/20)</span>`;
+                commentContainer.textContent = "Seuil de validation non atteint (12/20 minimum). Prenez le temps de revoir ce module avant de retenter.";
+            }
+        }
+
+        function resetToDashboardHome() {
+            document.getElementById('view-results').classList.add('hidden');
+            document.getElementById('ui-timer-card').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.remove('hidden');
+            document.querySelectorAll('.module-nav-item').forEach(el => el.classList.remove('active'));
+            renderDashboardGrid();
+        }
     </script>
 </body>
 </html>
